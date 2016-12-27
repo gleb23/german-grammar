@@ -3,11 +3,11 @@
 		pronoun/4,
 		noun/3,
 		adjective/5,
-		verb/5,
+		verb/6,
 		undet_article/4,
 		det_article/4,
 		question_word/2,
-		other_verbs/4,
+		other_verbs/5,
 		noun_phrase/4,
 		noun_pronoun_phrase/4,
 		subject/3,
@@ -33,18 +33,20 @@ pronoun(Person, Case) --> [Word], {pn(Word, Person, Case)}.
 noun(Gender) --> [Word], {lex(Word, n, Gender)}.
 adjective(Gender, Case, Dekl_type) --> [Word], {lex(Word_base, adj), string_concat(Word_base, Ending, Word), adj_dekl(Gender, Case, Dekl_type, Ending)}.
 
-verb(prasens, Person, Object_type) --> [Word], {lex(Infinitive, v, Object_type, _), word_conjugation(Infinitive, Person, Word)}.
-verb(perfekt, Person, _) --> [Word], {word_conjugation("haben", Person, Word)}.
-verb(modal_verb, Person, _) --> [Word], {lex(Infinitive, mv, _, _), word_conjugation(Infinitive, Person, Word)}.
+verb(prasens, Person, Object_type, "") --> [Word], {lex(Infinitive, v, Object_type, _), word_conjugation(Infinitive, Person, Word), \+trennbar(Infinitive, _)}.
+verb(prasens, Person, Object_type, Prefix) --> [Word], {lex(Infinitive, v, Object_type, _), word_conjugation(Infinitive, Person, Word), trennbar(Infinitive, Prefix)}.
+verb(perfekt, Person, _, _) --> [Word], {word_conjugation("haben", Person, Word)}.
+verb(modal_verb, Person, _, _) --> [Word], {lex(Infinitive, mv, _, _), word_conjugation(Infinitive, Person, Word)}.
 
 undet_article(Gender, Case) --> [Word], {uart(Word_base), string_concat(Word_base, Ending, Word), uart_dekl(Gender, Case, Ending)}.
 det_article(Gender, Case) --> [Word], {dart(Gender, Case, Word)}.
 
 question_word --> [Word], {qw(Word)}.
 
-other_verbs(prasens, _) --> [].
-other_verbs(perfekt, Object_type) --> [Word], {lex(Infinitive, v, Object_type, _), partizip2(Infinitive, Word)}.
-other_verbs(modal_verb, Object_type) --> [Infinitive], {lex(Infinitive, v, Object_type, _)}.
+other_verbs(prasens, _, "") --> [].
+other_verbs(prasens, _, Prefix) --> [Prefix].
+other_verbs(perfekt, Object_type, _) --> [Word], {lex(Infinitive, v, Object_type, _), partizip2(Infinitive, Word)}.
+other_verbs(modal_verb, Object_type, _) --> [Infinitive], {lex(Infinitive, v, Object_type, _)}.
 
 noun_phrase(Gender, Case) --> adjective(Gender, Case, strong_type), noun(Gender).
 noun_phrase(Gender, Case) --> possessive_pronoun(Gender, Case), noun(Gender).
@@ -72,9 +74,9 @@ object(vi) --> [].
 negation_place --> [].
 negation_place --> ["nicht"].
 
-simple_sentence(direct_word_order, Tense, Person, Object_type) --> subject(Person), verb(Tense, Person, Object_type), object(Object_type), negation_place, other_verbs(Tense, Object_type).
-simple_sentence(reversed_word_order, Tense, Person, Object_type) --> verb(Tense, Person, Object_type), subject(Person), object(Object_type), negation_place, other_verbs(Tense, Object_type).
-simple_sentence(nebensatz_word_order, Tense, Person, Object_type) --> subject(Person), object(Object_type), negation_place, other_verbs(Tense, Object_type), verb(Tense, Person, Object_type).
+simple_sentence(direct_word_order, Tense, Person, Object_type) --> subject(Person), verb(Tense, Person, Object_type, Prefix), object(Object_type), negation_place, other_verbs(Tense, Object_type, Prefix).
+simple_sentence(reversed_word_order, Tense, Person, Object_type) --> verb(Tense, Person, Object_type, Prefix), subject(Person), object(Object_type), negation_place, other_verbs(Tense, Object_type, Prefix).
+simple_sentence(nebensatz_word_order, Tense, Person, Object_type) --> subject(Person), object(Object_type), negation_place, other_verbs(Tense, Object_type, Prefix), verb(Tense, Person, Object_type, Prefix).
 
 frage --> simple_sentence(reversed_word_order, _, _, _).
 frage --> question_word, simple_sentence(reversed_word_order, _, _, _).

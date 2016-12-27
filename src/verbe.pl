@@ -57,6 +57,6 @@ verb_base(Infinitive, Verb_base) :- tr_prefix(Prefix), infinitive_ending(Ending)
 untrennbar(Infinitiv) :- string_concat(Prefix, _, Infinitiv), utr_prefix(Prefix).
 trennbar(Infinitiv, Prefix) :- string_concat(Prefix, _, Infinitiv), tr_prefix(Prefix).
 
-partizip2(Infinitive, Partizip2) :- lex(Infinitive, v, _, _), verb_base(Infinitive, Verb_base), concat_list_to_string(["ge", Verb_base, "t"], Partizip2).
 partizip2(Infinitive, Partizip2) :- untrennbar(Infinitive), lex(Infinitive, v, _, _), verb_base(Infinitive, Verb_base), concat_list_to_string([Verb_base, "t"], Partizip2).
 partizip2(Infinitive, Partizip2) :- trennbar(Infinitive, Prefix), lex(Infinitive, v, _, _), verb_base(Infinitive, Verb_base), concat_list_to_string([Prefix, "ge", Verb_base, "t"], Partizip2).
+partizip2(Infinitive, Partizip2) :- lex(Infinitive, v, _, _), verb_base(Infinitive, Verb_base), concat_list_to_string(["ge", Verb_base, "t"], Partizip2).

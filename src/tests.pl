@@ -23,7 +23,7 @@ test(word_conjugation) :- word_conjugation("aergern", s2, "aergerst").
 test(word_conjugation) :- word_conjugation("haben", s3, "hat").   % <---- irr
 test(word_conjugation) :- word_conjugation("bedanken", p1, "bedanken").
 test(word_conjugation) :- word_conjugation("koennen", p2, "koennt").  % <--- modal
-test(word_conjugation) :- word_conjugation("heissen", p3, "heissen").
+test(word_conjugation) :- word_conjugation("aussteigen", p3, "steigen").
 
 test(verb_base) :- verb_base("achten", "acht").  % <- en ending
 test(verb_base) :- verb_base("aergern", "aerger").  % <- n ending
@@ -50,18 +50,21 @@ test(pronoun) :- pronoun(s1, nom, ["ich"], []).
 test(noun) :- noun(fem, ["Mutter"], []).
 test(adjective) :- adjective(masc, nom, mixed_type, ["dummer"], []).
 
-test(verb) :- verb(prasens, s1, aufA, ["achte"], []).
-test(verb) :- verb(perfekt, s2, aufA, ["hast"], []).
-test(verb) :- verb(modal_verb, s3, aufA, ["kann"], []).
+test(verb) :- verb(prasens, s1, vi, "aus", ["steige"], []).
+test(verb) :- verb(prasens, s1, vt, "", ["heisse"], []).
+test(verb, [fail]) :- verb(prasens, s1, vi, "", ["steige"], []).
+test(verb) :- verb(perfekt, s2, vt, "", ["hast"], []).
+test(verb) :- verb(modal_verb, s3, aufA, "", ["kann"], []).
 
 test(undet_article) :- undet_article(masc, nom, ["ein"], []).
 test(det_article) :- det_article(masc, nom, ["der"], []).
 
 test(question_word) :- question_word(["Wo"], []).
 
-test(other_verbs) :- other_verbs(prasens, _, [], []).
-test(other_verbs) :- other_verbs(perfekt, vi, ["ausgesteigt"], []).
-test(other_verbs) :- other_verbs(modal_verb, vt, ["heissen"], []).
+test(other_verbs) :- other_verbs(prasens, _, "", [], []).
+test(other_verbs) :- other_verbs(prasens, _, "ein", ["ein"], []).
+test(other_verbs) :- other_verbs(perfekt, vi, "aus", ["ausgesteigt"], []).
+test(other_verbs) :- other_verbs(modal_verb, vt, "", ["heissen"], []).
 
 test(noun_phrase) :- noun_phrase(masc, dat, ["dummem", "Vater"], []).
 test(noun_phrase) :- noun_phrase(fem, akk, ["meine", "Mutter"], []).
@@ -87,11 +90,11 @@ test(object) - object(vi, [], []).
 test(negation_place) :- negation_place([], []).
 test(negation_place) :- negation_place(["nicht"], []).
 
-test(simple_sentence) :- simple_sentence(direct_word_order, prasens, s1, vt, ["ich", "habe", "eine", "Mutter", "nicht"], []).
+test(simple_sentence) :- simple_sentence(direct_word_order, prasens, s1, vt, ["ich", "heisse", "eine", "Mutter", "nicht"], []).
 test(simple_sentence) :- simple_sentence(reversed_word_order, perfekt, p1, aufA, ["haben", "wir", "auf", "meine", "Mutter", "geachtet"], []).
 test(simple_sentence) :- simple_sentence(nebensatz_word_order, perfekt, s3, uberA, ["er", "uber", "mich", "geaergert", "hat"], []).
 
-test(frage) :- frage(["einsteigt", "ihr"], []).
+test(frage) :- frage(["steigt", "ihr", "ein"], []).
 test(frage) :- frage(["Wann", "habt", "ihr", "eingesteigt"], []).
 
 test(s) :- s("du hast auf meine Mutter geachtet").
